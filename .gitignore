@@ -1,9 +1,0 @@
-node_modules/
-.env
-.env.*
-dist/
-logs/
-*.log
-.DS_Store
-coverage/
-.gitignore
