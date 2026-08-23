@@ -1,7 +1,5 @@
 import { describe, it, expect } from "@jest/globals";
 
-// ─── Error Classes ──────────────────────────────────────────────────
-
 describe("Error Classes", () => {
   describe("AppError", () => {
     it("should create error with default 500 status", async () => {

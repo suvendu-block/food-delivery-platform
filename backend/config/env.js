@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Validate required environment variables at boot — fail fast
 const requiredEnv = ["MONGODB_URI", "JWT_SECRET"];
 
 const missing = requiredEnv.filter((key) => !process.env[key]);
@@ -20,7 +19,6 @@ export const env = {
   bcryptSaltRounds: parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 12,
 };
 
-// CORS origins whitelist
 export const corsOptions = {
   origin: process.env.CORS_ORIGIN || "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "DELETE"],

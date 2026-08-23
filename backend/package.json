@@ -11,8 +11,6 @@
     "test:unit": "NODE_OPTIONS='--experimental-vm-modules' jest tests/unit --forceExit",
     "test:integration": "NODE_OPTIONS='--experimental-vm-modules' jest tests/integration --forceExit --detectOpenHandles"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -30,10 +28,10 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@jest/globals": "^30.4.1",
-    "jest": "^30.4.2",
+    "@jest/globals": "^30.0.5",
+    "jest": "^30.0.5",
     "mongodb-memory-server": "^11.2.0",
     "nodemon": "^3.1.14",
-    "supertest": "^7.2.2"
+    "supertest": "^7.1.0"
   }
 }

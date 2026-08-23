@@ -48,7 +48,6 @@ const restaurantSchema = new Schema(
   { timestamps: true }
 );
 
-// Indexes for common queries
 restaurantSchema.index({ isOpen: 1 });
 restaurantSchema.index({ cuisine: 1 });
 restaurantSchema.index({ owner: 1 });

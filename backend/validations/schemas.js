@@ -1,12 +1,10 @@
 import { z } from "zod";
 
-// --- User Validation Schemas ---
-
 export const registerUserSchema = z.object({
   username: z.string().min(3).max(50).trim(),
   email: z.string().email().toLowerCase(),
   password: z.string().min(6).max(128),
-  // Role is NOT accepted from request body — always defaults to "customer"
+  // Role is ignored — always defaults to "customer"
 });
 
 export const loginUserSchema = z.object({
@@ -30,8 +28,6 @@ export const updateProfileSchema = z.object({
     .optional(),
 });
 
-// --- Restaurant Validation Schemas ---
-
 export const createRestaurantSchema = z.object({
   name: z.string().min(3).max(100),
   description: z.string().optional(),
@@ -48,8 +44,6 @@ export const createRestaurantSchema = z.object({
 
 export const updateRestaurantSchema = createRestaurantSchema.partial();
 
-// --- Menu Validation Schemas ---
-
 export const createMenuSchema = z.object({
   restaurantId: z
     .string()
@@ -64,8 +58,6 @@ export const createMenuSchema = z.object({
 });
 
 export const updateMenuSchema = createMenuSchema.partial();
-
-// --- Order Validation Schemas ---
 
 export const createOrderSchema = z.object({
   restaurantId: z
@@ -95,8 +87,6 @@ export const updateOrderStatusSchema = z.object({
     "cancelled",
   ]),
 });
-
-// --- Review Validation Schemas ---
 
 export const createReviewSchema = z.object({
   restaurantId: z

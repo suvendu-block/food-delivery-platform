@@ -3,24 +3,15 @@ import { baseLogger } from "../utils/logger.js";
 
 const logger = baseLogger.child({ module: "errorHandler" });
 
-// Global error handler — must have 4 arguments for Express to recognize it
 const globalErrorHandler = (err, req, res, next) => {
-  // Log error with request ID for correlation
   logger.error(
-    {
-      err,
-      requestId: req.requestId,
-      path: req.path,
-      method: req.method,
-    },
+    { err, requestId: req.requestId, path: req.path, method: req.method },
     "Unhandled error"
   );
 
-  // Determine status code
   let statusCode = err.statusCode || 500;
   let message = err.message || "Internal Server Error";
 
-  // Handle specific error types
   if (err instanceof ValidationError) {
     statusCode = 400;
     message = err.message;
@@ -34,13 +25,11 @@ const globalErrorHandler = (err, req, res, next) => {
     statusCode = 404;
     message = err.message;
   } else if (err.name === "ValidationError") {
-    // Mongoose validation error
     statusCode = 400;
     message = Object.values(err.errors)
       .map((val) => val.message)
       .join(", ");
   } else if (err.code === 11000) {
-    // Mongoose duplicate key error
     statusCode = 409;
     const field = Object.keys(err.keyValue)[0];
     message = `Duplicate value for field: ${field}`;
@@ -49,7 +38,6 @@ const globalErrorHandler = (err, req, res, next) => {
     message = "Invalid ID format";
   }
 
-  // Don't leak stack in production
   const errorResponse = {
     success: false,
     message,

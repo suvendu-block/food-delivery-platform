@@ -26,7 +26,6 @@ const reviewSchema = new Schema(
   { timestamps: true }
 );
 
-// Prevent duplicate reviews from same user per restaurant
 reviewSchema.index({ userId: 1, restaurantId: 1 }, { unique: true });
 
 export default model("Review", reviewSchema);

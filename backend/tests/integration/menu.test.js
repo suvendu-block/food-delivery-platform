@@ -49,8 +49,6 @@ beforeEach(async () => {
   await setupTestData();
 });
 
-// ─── POST /api/menus ────────────────────────────────────────────────
-
 describe("POST /api/menus", () => {
   it("should create a menu item as restaurant owner", async () => {
     const restaurant = await createRestaurant(ownerUserId, { name: "Menu Test Restaurant" });
@@ -137,8 +135,6 @@ describe("POST /api/menus", () => {
   });
 });
 
-// ─── PUT /api/menus/:id ────────────────────────────────────────────
-
 describe("PUT /api/menus/:id", () => {
   it("should update own menu item", async () => {
     const restaurant = await createRestaurant(ownerUserId, { name: "Update Menu" });
@@ -170,8 +166,6 @@ describe("PUT /api/menus/:id", () => {
     expect(res.status).toBe(403);
   });
 });
-
-// ─── DELETE /api/menus/:id ──────────────────────────────────────────
 
 describe("DELETE /api/menus/:id", () => {
   it("should delete own menu item", async () => {

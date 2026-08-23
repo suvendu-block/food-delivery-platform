@@ -18,8 +18,6 @@ beforeEach(async () => {
   await clearDB();
 });
 
-// ─── Health Check ───────────────────────────────────────────────────
-
 describe("GET /health", () => {
   it("should return status ok", async () => {
     const res = await request(app).get("/health");
@@ -29,8 +27,6 @@ describe("GET /health", () => {
   });
 });
 
-// ─── 404 Handler ────────────────────────────────────────────────────
-
 describe("Unknown routes", () => {
   it("should return 404 for unknown routes", async () => {
     const res = await request(app).get("/api/nonexistent");
@@ -39,8 +35,6 @@ describe("Unknown routes", () => {
     expect(res.body.message).toBe("Route not found");
   });
 });
-
-// ─── POST /api/users/register ───────────────────────────────────────
 
 describe("POST /api/users/register", () => {
   const validUser = {
@@ -113,8 +107,6 @@ describe("POST /api/users/register", () => {
   });
 });
 
-// ─── POST /api/users/login ──────────────────────────────────────────
-
 describe("POST /api/users/login", () => {
   it("should login with valid credentials", async () => {
     await request(app).post("/api/users/register").send({
@@ -158,8 +150,6 @@ describe("POST /api/users/login", () => {
   });
 });
 
-// ─── GET /api/users/profile ─────────────────────────────────────────
-
 describe("GET /api/users/profile", () => {
   it("should return user profile when authenticated", async () => {
     const { token } = await registerUser({
@@ -192,8 +182,6 @@ describe("GET /api/users/profile", () => {
     expect(res.body.success).toBe(false);
   });
 });
-
-// ─── PUT /api/users/profile ─────────────────────────────────────────
 
 describe("PUT /api/users/profile", () => {
   it("should update username", async () => {

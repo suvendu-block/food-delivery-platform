@@ -10,61 +10,34 @@ const deliverySchema = new Schema(
     driverId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
     status: {
       type: String,
-      enum: ["assigned", "picked_up", "in_transit", "delivered", "failed"],
-      default: "assigned",
+      enum: ["pending", "assigned", "picked_up", "in_transit", "delivered"],
+      default: "pending",
     },
     pickupLocation: {
-      street: String,
-      city: String,
-      state: String,
-      zip: String,
-      coordinates: {
-        type: [Number], // [longitude, latitude] — GeoJSON order
-        index: "2dsphere",
-      },
+      type: { type: String, enum: ["Point"] },
+      coordinates: { type: [Number] },
     },
     dropoffLocation: {
-      street: String,
-      city: String,
-      state: String,
-      zip: String,
-      coordinates: {
-        type: [Number], // [longitude, latitude] — GeoJSON order
-        index: "2dsphere",
-      },
+      type: { type: String, enum: ["Point"] },
+      coordinates: { type: [Number] },
     },
     currentLocation: {
-      type: [Number], // [longitude, latitude] — for real-time tracking
-      index: "2dsphere",
+      type: { type: String, enum: ["Point"] },
+      coordinates: { type: [Number] },
     },
     isAvailable: {
       type: Boolean,
       default: true,
     },
-    assignedAt: {
-      type: Date,
-      default: Date.now,
-    },
-    pickedUpAt: {
-      type: Date,
-    },
-    deliveredAt: {
-      type: Date,
-    },
-    estimatedDelivery: {
-      type: Date,
-    },
   },
   { timestamps: true }
 );
 
-// Indexes
-deliverySchema.index({ driverId: 1, status: 1 });
-deliverySchema.index({ orderId: 1 });
-deliverySchema.index({ isAvailable: 1, currentLocation: "2dsphere" });
+deliverySchema.index({ "pickupLocation": "2dsphere" });
+deliverySchema.index({ "dropoffLocation": "2dsphere" });
+deliverySchema.index({ "currentLocation": "2dsphere" });
 
 export default model("Delivery", deliverySchema);

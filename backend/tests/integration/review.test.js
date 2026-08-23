@@ -39,8 +39,6 @@ beforeEach(async () => {
   await setupTestData();
 });
 
-// ─── POST /api/reviews ──────────────────────────────────────────────
-
 describe("POST /api/reviews", () => {
   it("should create a review", async () => {
     const restaurant = await createRestaurant(ownerUserId, { name: "Review Test" });
@@ -51,13 +49,13 @@ describe("POST /api/reviews", () => {
       .send({
         restaurantId: restaurant._id.toString(),
         rating: 5,
-        comment: "Amazing food!",
+        comment: "Solid spot",
       });
 
     expect(res.status).toBe(201);
     expect(res.body.success).toBe(true);
     expect(res.body.data.rating).toBe(5);
-    expect(res.body.data.comment).toBe("Amazing food!");
+    expect(res.body.data.comment).toBe("Solid spot");
     expect(res.body.data.userId.username).toBe("review_customer");
   });
 
@@ -124,8 +122,6 @@ describe("POST /api/reviews", () => {
   });
 });
 
-// ─── Rating Aggregation ─────────────────────────────────────────────
-
 describe("Rating Aggregation", () => {
   it("should update restaurant rating when review is created", async () => {
     const restaurant = await createRestaurant(ownerUserId, { name: "Rating Test" });
@@ -142,13 +138,11 @@ describe("Rating Aggregation", () => {
   it("should calculate average across multiple users", async () => {
     const restaurant = await createRestaurant(ownerUserId, { name: "Avg Rating" });
 
-    // First user rates 5
     await request(app)
       .post("/api/reviews")
       .set("Authorization", `Bearer ${customerToken}`)
       .send({ restaurantId: restaurant._id.toString(), rating: 5 });
 
-    // Second user rates 3
     const customer2 = await registerUser({
       username: "review_customer2",
       email: "review2@test.com",
@@ -160,7 +154,7 @@ describe("Rating Aggregation", () => {
       .send({ restaurantId: restaurant._id.toString(), rating: 3 });
 
     const res = await request(app).get(`/api/restaurants/${restaurant._id.toString()}`);
-    expect(res.body.data.rating).toBe(4); // (5+3)/2 = 4
+    expect(res.body.data.rating).toBe(4);
   });
 
   it("should reset rating to 0 when all reviews deleted", async () => {
@@ -179,8 +173,6 @@ describe("Rating Aggregation", () => {
     expect(res.body.data.rating).toBe(0);
   });
 });
-
-// ─── PUT /api/reviews/:id ───────────────────────────────────────────
 
 describe("PUT /api/reviews/:id", () => {
   it("should update own review", async () => {
@@ -246,8 +238,6 @@ describe("PUT /api/reviews/:id", () => {
   });
 });
 
-// ─── DELETE /api/reviews/:id ────────────────────────────────────────
-
 describe("DELETE /api/reviews/:id", () => {
   it("should delete own review", async () => {
     const restaurant = await createRestaurant(ownerUserId, { name: "Delete Review" });
@@ -307,8 +297,6 @@ describe("DELETE /api/reviews/:id", () => {
     expect(res.status).toBe(403);
   });
 });
-
-// ─── GET /api/reviews/restaurant/:restaurantId ──────────────────────
 
 describe("GET /api/reviews/restaurant/:restaurantId", () => {
   it("should return reviews for a restaurant", async () => {

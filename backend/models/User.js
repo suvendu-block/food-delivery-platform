@@ -21,7 +21,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
       minlength: 6,
-      select: false, // Never return password by default
+      select: false,
     },
     role: {
       type: String,
@@ -49,24 +49,20 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-// Hash password before saving
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
   const salt = await bcrypt.genSalt(env.bcryptSaltRounds);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-// Method to generate auth token with expiration
 userSchema.methods.generateAuthToken = function () {
-  const token = jwt.sign(
+  return jwt.sign(
     { _id: this._id, role: this.role },
     env.jwtSecret,
     { expiresIn: env.jwtExpire }
   );
-  return token;
 };
 
-// Static to find by credentials - uses bcrypt comparison
 userSchema.statics.findByCredentials = async function (email, password) {
   const user = await this.findOne({ email }).select("+password");
   if (!user) throw new Error("Invalid email or password");

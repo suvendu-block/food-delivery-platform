@@ -49,8 +49,6 @@ beforeEach(async () => {
   await setupTestData();
 });
 
-// ─── GET /api/restaurants ───────────────────────────────────────────
-
 describe("GET /api/restaurants", () => {
   it("should return empty array when no restaurants exist", async () => {
     const res = await request(app).get("/api/restaurants");
@@ -68,8 +66,6 @@ describe("GET /api/restaurants", () => {
     expect(res.body.data[0].name).toBe("Open Place");
   });
 });
-
-// ─── GET /api/restaurants/:id ───────────────────────────────────────
 
 describe("GET /api/restaurants/:id", () => {
   it("should return a restaurant with populated menu", async () => {
@@ -89,8 +85,6 @@ describe("GET /api/restaurants/:id", () => {
     expect(res.body.success).toBe(false);
   });
 });
-
-// ─── POST /api/restaurants ──────────────────────────────────────────
 
 describe("POST /api/restaurants", () => {
   const validRestaurant = {
@@ -133,14 +127,12 @@ describe("POST /api/restaurants", () => {
     const res = await request(app)
       .post("/api/restaurants")
       .set("Authorization", `Bearer ${ownerToken}`)
-      .send({ name: "X" }); // too short
+      .send({ name: "X" });
 
     expect(res.status).toBe(400);
     expect(res.body.success).toBe(false);
   });
 });
-
-// ─── PUT /api/restaurants/:id ───────────────────────────────────────
 
 describe("PUT /api/restaurants/:id", () => {
   it("should update own restaurant", async () => {

@@ -4,9 +4,6 @@ import { protect, requireRole } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
-// @route   GET /api/restaurants
-// @desc    Get all open restaurants
-// @access  Public
 router.get("/", async (req, res, next) => {
   try {
     const restaurants = await restaurantService.getAllOpen();
@@ -16,9 +13,6 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// @route   GET /api/restaurants/:id
-// @desc    Get restaurant by ID with menu
-// @access  Public
 router.get("/:id", async (req, res, next) => {
   try {
     const restaurant = await restaurantService.getById(req.params.id);
@@ -28,9 +22,6 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// @route   POST /api/restaurants
-// @desc    Create restaurant (restaurant owner only)
-// @access  Private + restaurant role
 router.post("/", protect, requireRole("restaurant"), async (req, res, next) => {
   try {
     const restaurant = await restaurantService.create(req.body, req.user._id);
@@ -40,9 +31,6 @@ router.post("/", protect, requireRole("restaurant"), async (req, res, next) => {
   }
 });
 
-// @route   PUT /api/restaurants/:id
-// @desc    Update restaurant (owner or admin only)
-// @access  Private + owner
 router.put("/:id", protect, requireRole("restaurant", "admin"), async (req, res, next) => {
   try {
     const restaurant = await restaurantService.update(
@@ -57,9 +45,6 @@ router.put("/:id", protect, requireRole("restaurant", "admin"), async (req, res,
   }
 });
 
-// @route   GET /api/restaurants/:id/menu
-// @desc    Get restaurant menu
-// @access  Public
 router.get("/:id/menu", async (req, res, next) => {
   try {
     const menuItems = await restaurantService.getMenu(req.params.id);

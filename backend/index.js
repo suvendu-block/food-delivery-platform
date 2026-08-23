@@ -3,7 +3,6 @@ import app from "./app.js";
 import { env } from "./config/env.js";
 import { connectDB } from "./config/db.js";
 
-// ─── Server Start ───────────────────────────────────────────────────
 let server;
 
 const startServer = async () => {
@@ -13,7 +12,6 @@ const startServer = async () => {
   });
 };
 
-// ─── Graceful Shutdown ──────────────────────────────────────────────
 const gracefulShutdown = async (signal) => {
   console.log(`\n${signal} received. Starting graceful shutdown...`);
 
@@ -32,7 +30,6 @@ const gracefulShutdown = async (signal) => {
     });
   }
 
-  // Force exit after 10 seconds if graceful shutdown hangs
   setTimeout(() => {
     console.error("Forced shutdown after timeout");
     process.exit(1);

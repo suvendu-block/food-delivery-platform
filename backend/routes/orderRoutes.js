@@ -5,10 +5,6 @@ import { orderLimiter } from "../middleware/rateLimiter.js";
 
 const router = Router();
 
-// @route   GET /api/orders/user/me
-// @desc    Get current user's orders
-// @access  Private
-// NOTE: This MUST be before /:id to avoid Express matching "user" as :id
 router.get("/user/me", protect, async (req, res, next) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
@@ -20,10 +16,6 @@ router.get("/user/me", protect, async (req, res, next) => {
   }
 });
 
-// @route   GET /api/orders/restaurant/:restaurantId
-// @desc    Get orders for a restaurant (owner or admin)
-// @access  Private + restaurant owner or admin
-// NOTE: Must be before /:id to avoid Express matching "restaurant" as :id
 router.get("/restaurant/:restaurantId", protect, async (req, res, next) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
@@ -41,9 +33,6 @@ router.get("/restaurant/:restaurantId", protect, async (req, res, next) => {
   }
 });
 
-// @route   POST /api/orders
-// @desc    Create new order
-// @access  Private
 router.post("/", protect, orderLimiter, async (req, res, next) => {
   try {
     const order = await orderService.createOrder(req.user._id, req.body);
@@ -53,9 +42,6 @@ router.post("/", protect, orderLimiter, async (req, res, next) => {
   }
 });
 
-// @route   PUT /api/orders/:id/status
-// @desc    Update order status (admin only)
-// @access  Private + admin
 router.put("/:id/status", protect, requireRole("admin"), async (req, res, next) => {
   try {
     const order = await orderService.updateStatus(
@@ -69,9 +55,6 @@ router.put("/:id/status", protect, requireRole("admin"), async (req, res, next) 
   }
 });
 
-// @route   GET /api/orders/:id
-// @desc    Get order by ID
-// @access  Private (owner or admin)
 router.get("/:id", protect, async (req, res, next) => {
   try {
     const order = await orderService.getOrderById(

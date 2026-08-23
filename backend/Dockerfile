@@ -1,25 +1,20 @@
-# ─── Build Stage ─────────────────────────────────────────────────────
-FROM node:22-alpine AS builder
+FROM node:22-alpine AS deps
 WORKDIR /app
-COPY package*.json ./
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
-RUN npm prune --omit=dev
 
-# ─── Production Stage ───────────────────────────────────────────────
 FROM node:22-alpine
+RUN addgroup -g 1001 -S appgroup && adduser -S appuser -u 1001 -G appgroup
 WORKDIR /app
-
-# Create non-root user for security
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
-COPY --from=builder --chown=appuser:appgroup /app ./
-
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=build /app .
 USER appuser
-
 EXPOSE 3000
-
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
-
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD wget -qO- http://localhost:3000/health || exit 1
 CMD ["node", "index.js"]

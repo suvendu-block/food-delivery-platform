@@ -23,9 +23,6 @@ import {
   createReviewSchema,
 } from "../validations/schemas.js";
 
-/**
- * Service: User Authentication & Profile
- */
 export const authService = {
   async register(payload) {
     const result = registerUserSchema.safeParse(payload);
@@ -108,9 +105,6 @@ export const authService = {
   },
 };
 
-/**
- * Service: Restaurant Operations
- */
 export const restaurantService = {
   async getAllOpen() {
     return Restaurant.find({ isOpen: true }).select("-__v").lean();
@@ -176,9 +170,6 @@ export const restaurantService = {
   },
 };
 
-/**
- * Service: Menu Item Management
- */
 export const menuService = {
   async createMenu(payload, userId, userRole) {
     const result = createMenuSchema.safeParse(payload);
@@ -199,7 +190,6 @@ export const menuService = {
     const menuItem = new Menu({ restaurantId, ...menuData });
     await menuItem.save();
 
-    // Add the new menu item ref to the restaurant's menu array
     await Restaurant.findByIdAndUpdate(restaurantId, {
       $push: { menu: menuItem._id },
     });
@@ -248,7 +238,6 @@ export const menuService = {
       throw new AuthorizationError("Not authorized to delete this menu item");
     }
 
-    // Remove from Restaurant's menu array
     await Restaurant.findByIdAndUpdate(menuItem.restaurantId, {
       $pull: { menu: menuId },
     });
@@ -259,9 +248,6 @@ export const menuService = {
   },
 };
 
-/**
- * Service: Order Management
- */
 export const orderService = {
   async createOrder(userId, payload) {
     const result = createOrderSchema.safeParse(payload);
@@ -411,9 +397,6 @@ export const orderService = {
   },
 };
 
-/**
- * Service: Reviews & Rating Aggregation
- */
 export const reviewService = {
   async createReview(userId, payload) {
     const result = createReviewSchema.safeParse(payload);
@@ -436,7 +419,6 @@ export const reviewService = {
     const review = new Review({ userId, restaurantId, rating, comment });
     await review.save();
 
-    // Recalculate and update restaurant average rating
     await this._updateRestaurantRating(restaurantId);
 
     return review.populate("userId", "username");
@@ -457,7 +439,6 @@ export const reviewService = {
     if (comment !== undefined) review.comment = comment;
     await review.save();
 
-    // Recalculate restaurant rating
     await this._updateRestaurantRating(review.restaurantId);
 
     return review.populate("userId", "username");
@@ -476,7 +457,6 @@ export const reviewService = {
     const restaurantId = review.restaurantId;
     await Review.findByIdAndDelete(reviewId);
 
-    // Recalculate restaurant rating
     await this._updateRestaurantRating(restaurantId);
 
     return { message: "Review deleted" };
@@ -520,9 +500,6 @@ export const reviewService = {
     return review;
   },
 
-  /**
-   * Recalculate average rating for a restaurant using MongoDB aggregation.
-   */
   async _updateRestaurantRating(restaurantId) {
     const result = await Review.aggregate([
       { $match: { restaurantId: new mongoose.Types.ObjectId(restaurantId) } },

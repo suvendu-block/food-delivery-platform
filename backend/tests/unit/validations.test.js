@@ -10,7 +10,7 @@ describe("Validation Schemas", () => {
         password: "password123",
       });
       expect(result.success).toBe(true);
-      expect(result.data.email).toBe("test@example.com"); // lowercase
+      expect(result.data.email).toBe("test@example.com");
     });
 
     it("should reject short username", async () => {
@@ -77,7 +77,7 @@ describe("Validation Schemas", () => {
         },
       });
       expect(result.success).toBe(true);
-      expect(result.data.isOpen).toBe(true); // default
+      expect(result.data.isOpen).toBe(true);
     });
 
     it("should reject missing required fields", async () => {
@@ -199,7 +199,7 @@ describe("Validation Schemas", () => {
       const result = createReviewSchema.safeParse({
         restaurantId: "507f1f77bcf86cd799439011",
         rating: 4,
-        comment: "Great food!",
+        comment: "Solid spot",
       });
       expect(result.success).toBe(true);
     });

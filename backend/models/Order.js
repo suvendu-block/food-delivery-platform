@@ -21,7 +21,8 @@ const orderSchema = new Schema(
         },
         quantity: {
           type: Number,
-          default: 1,
+          required: true,
+          min: 1,
         },
         priceAtPurchase: {
           type: Number,
@@ -32,6 +33,7 @@ const orderSchema = new Schema(
     totalAmount: {
       type: Number,
       required: true,
+      min: 0,
     },
     status: {
       type: String,
@@ -45,27 +47,21 @@ const orderSchema = new Schema(
       ],
       default: "pending",
     },
+    deliveryAddress: {
+      type: String,
+      required: true,
+    },
     paymentMethod: {
       type: String,
       enum: ["card", "cash", "wallet"],
       default: "card",
     },
-    deliveryAddress: {
-      type: String,
-    },
-    estimatedDelivery: {
-      type: Date,
-    },
-    actualDelivery: {
-      type: Date,
-    },
   },
   { timestamps: true }
 );
 
-// Indexes for common queries
 orderSchema.index({ userId: 1, createdAt: -1 });
-orderSchema.index({ restaurantId: 1, status: 1 });
+orderSchema.index({ restaurantId: 1, createdAt: -1 });
 orderSchema.index({ status: 1 });
 
 export default model("Order", orderSchema);

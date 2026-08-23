@@ -4,10 +4,6 @@ import { protect } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
-// @route   GET /api/reviews/restaurant/:restaurantId
-// @desc    Get reviews for a restaurant (paginated)
-// @access  Public
-// NOTE: MUST be before /:id to avoid Express matching "restaurant" as review ID
 router.get("/restaurant/:restaurantId", async (req, res, next) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
@@ -23,9 +19,6 @@ router.get("/restaurant/:restaurantId", async (req, res, next) => {
   }
 });
 
-// @route   POST /api/reviews
-// @desc    Create a review for a restaurant
-// @access  Private
 router.post("/", protect, async (req, res, next) => {
   try {
     const review = await reviewService.createReview(req.user._id, req.body);
@@ -35,9 +28,6 @@ router.post("/", protect, async (req, res, next) => {
   }
 });
 
-// @route   PUT /api/reviews/:id
-// @desc    Update a review
-// @access  Private (owner or admin)
 router.put("/:id", protect, async (req, res, next) => {
   try {
     const review = await reviewService.updateReview(
@@ -52,9 +42,6 @@ router.put("/:id", protect, async (req, res, next) => {
   }
 });
 
-// @route   DELETE /api/reviews/:id
-// @desc    Delete a review
-// @access  Private (owner or admin)
 router.delete("/:id", protect, async (req, res, next) => {
   try {
     const result = await reviewService.deleteReview(
@@ -68,9 +55,6 @@ router.delete("/:id", protect, async (req, res, next) => {
   }
 });
 
-// @route   GET /api/reviews/:id
-// @desc    Get a single review by ID
-// @access  Public
 router.get("/:id", async (req, res, next) => {
   try {
     const review = await reviewService.getReviewById(req.params.id);

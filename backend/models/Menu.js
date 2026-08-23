@@ -10,9 +10,11 @@ const menuSchema = new Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
     },
     description: {
       type: String,
+      trim: true,
     },
     price: {
       type: Number,
@@ -22,6 +24,7 @@ const menuSchema = new Schema(
     category: {
       type: String,
       enum: ["appetizer", "main", "drink", "dessert"],
+      required: true,
     },
     isAvailable: {
       type: Boolean,
@@ -33,12 +36,12 @@ const menuSchema = new Schema(
     prepTime: {
       type: Number,
       default: 20,
+      min: 1,
     },
   },
   { timestamps: true }
 );
 
-// Indexes for common queries
 menuSchema.index({ restaurantId: 1, isAvailable: 1 });
 
 export default model("Menu", menuSchema);

@@ -5,9 +5,6 @@ import { authLimiter } from "../middleware/rateLimiter.js";
 
 const router = Router();
 
-// @route   POST /api/users/register
-// @desc    Register new user
-// @access  Public
 router.post("/register", authLimiter, async (req, res, next) => {
   try {
     const { user, token } = await authService.register(req.body);
@@ -17,9 +14,6 @@ router.post("/register", authLimiter, async (req, res, next) => {
   }
 });
 
-// @route   POST /api/users/login
-// @desc    Login user
-// @access  Public
 router.post("/login", authLimiter, async (req, res, next) => {
   try {
     const { user, token } = await authService.login(req.body);
@@ -29,9 +23,6 @@ router.post("/login", authLimiter, async (req, res, next) => {
   }
 });
 
-// @route   GET /api/users/profile
-// @desc    Get user profile
-// @access  Private
 router.get("/profile", protect, async (req, res, next) => {
   try {
     const user = await authService.getProfile(req.user._id);
@@ -41,9 +32,6 @@ router.get("/profile", protect, async (req, res, next) => {
   }
 });
 
-// @route   PUT /api/users/profile
-// @desc    Update user profile
-// @access  Private
 router.put("/profile", protect, async (req, res, next) => {
   try {
     const user = await authService.updateProfile(req.user._id, req.body);

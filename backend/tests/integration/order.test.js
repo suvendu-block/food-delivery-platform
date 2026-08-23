@@ -4,35 +4,29 @@ import mongoose from "mongoose";
 import { startTestDB, stopTestDB, clearDB, registerUser, createRestaurant, createMenuItem } from "../helpers.js";
 
 let app;
-
-// These are re-created in beforeEach
 let ownerToken, ownerUserId;
 let customerToken, customerUserId;
 
 const setupTestData = async () => {
   const { authService } = await import("../../services/index.js");
 
-  // Register restaurant owner
   const owner = await registerUser({
     username: "order_owner",
     email: "orderowner@test.com",
   });
   ownerUserId = owner.user._id.toString();
 
-  // Promote to restaurant role
   await mongoose.connection.collections.users.updateOne(
     { _id: new mongoose.Types.ObjectId(ownerUserId) },
     { $set: { role: "restaurant" } }
   );
 
-  // Re-login to get token with restaurant role
   const { token: freshToken } = await authService.login({
     email: "orderowner@test.com",
     password: "password123",
   });
   ownerToken = freshToken;
 
-  // Register customer
   const customer = await registerUser({
     username: "order_customer",
     email: "ordercustomer@test.com",
@@ -55,8 +49,6 @@ beforeEach(async () => {
   await clearDB();
   await setupTestData();
 });
-
-// ─── POST /api/orders ───────────────────────────────────────────────
 
 describe("POST /api/orders", () => {
   it("should create an order with delivery address and payment method", async () => {
@@ -168,8 +160,6 @@ describe("POST /api/orders", () => {
   });
 });
 
-// ─── GET /api/orders/user/me ────────────────────────────────────────
-
 describe("GET /api/orders/user/me", () => {
   it("should return customer's orders", async () => {
     const restaurant = await createRestaurant(ownerUserId, { name: "My Orders" });
@@ -200,8 +190,6 @@ describe("GET /api/orders/user/me", () => {
     expect(res.status).toBe(401);
   });
 });
-
-// ─── GET /api/orders/restaurant/:restaurantId ───────────────────────
 
 describe("GET /api/orders/restaurant/:restaurantId", () => {
   it("should return orders for restaurant owner", async () => {
